@@ -30,7 +30,7 @@ char *while_flag, *random_buffer;
 
 void student_setting() {
 
-    a1 = 24;
+    a1 = 26; 
 
     a2 = 14;
 
@@ -111,6 +111,7 @@ int main() {
     if(a1 < 12) {
 
         if (if_flag != a1 / 2 + 1) {
+            //printf("%d\n",if_flag); debug
 
             test_failed();
 
@@ -127,7 +128,7 @@ int main() {
     } else {
 
         if (if_flag != a1 << 4) {
-
+            //printf("%d\n",if_flag); debug
             test_failed();
 
         }

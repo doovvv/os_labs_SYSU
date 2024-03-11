@@ -1,3 +1,4 @@
+org 0x7c00
 [bits 16]
 xor ax, ax ; eax = 0
 ; 初始化段寄存器, 段地址全部设为0
@@ -13,7 +14,7 @@ mov ax, 0xb800
 mov gs, ax
 
 
-mov ah, 0x03 ;青色
+mov ah, 0x01 ; 青色
 mov al, 'H'
 mov [gs:2 * 0], ax
 
