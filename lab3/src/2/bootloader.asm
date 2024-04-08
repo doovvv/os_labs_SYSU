@@ -1,5 +1,5 @@
 %include "boot.inc"
-org 0x7e00
+;org 0x7e00
 [bits 16]
 mov ax, 0xb800
 mov gs, ax
@@ -74,6 +74,33 @@ output_protect_mode_tag:
     inc esi
     loop output_protect_mode_tag
 
+mov ecx, task4_tag_end - task4_tag
+mov ebx, 2*(12*80+12)
+mov esi, task4_tag
+output_task4_tag:
+    mov dl, 2
+    mov ax, cx
+    div dl
+    mov al, ah
+    cmp al, 0x0
+    je change_color_1
+    continue1:
+    cmp al, 0x1
+    je change_color_2
+    continue2:
+    mov al, [esi]
+    mov word[gs:bx], ax
+    inc esi
+    inc dx
+    add ebx,2
+    loop output_task4_tag
+jmp $ ; 死循环
+change_color_1:
+    mov ah, 0x71
+    jmp continue1
+change_color_2:
+    mov ah, 0x17
+    jmp continue2
 jmp $ ; 死循环
 
 pgdt dw 0
@@ -84,3 +111,6 @@ bootloader_tag_end:
 
 protect_mode_tag db 'enter protect mode'
 protect_mode_tag_end:
+
+task4_tag db '22336290ZC'
+task4_tag_end:
