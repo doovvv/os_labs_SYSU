@@ -7,38 +7,36 @@ asm_hello_world:
     xor eax, eax
 
     mov ah, 0x03 ;青色
-    mov al, 'H'
+    mov al, '2'
     mov [gs:2 * 0], ax
 
-    mov al, 'e'
+    mov al, '2'
     mov [gs:2 * 1], ax
 
-    mov al, 'l'
+    mov al, '3'
     mov [gs:2 * 2], ax
 
-    mov al, 'l'
+    mov al, '3'
     mov [gs:2 * 3], ax
 
-    mov al, 'o'
+    mov al, '6'
     mov [gs:2 * 4], ax
 
-    mov al, ' '
+    mov al, '2'
     mov [gs:2 * 5], ax
 
-    mov al, 'W'
+    mov al, '9'
     mov [gs:2 * 6], ax
 
-    mov al, 'o'
+    mov al, '0'
     mov [gs:2 * 7], ax
 
-    mov al, 'r'
+    mov al, 'z'
     mov [gs:2 * 8], ax
 
-    mov al, 'l'
+    mov al, 'c'
     mov [gs:2 * 9], ax
 
-    mov al, 'd'
-    mov [gs:2 * 10], ax
 
     pop eax
     ret

@@ -5,7 +5,7 @@ global asm_lidt
 global asm_unhandled_interrupt
 global asm_halt
 
-ASM_UNHANDLED_INTERRUPT_INFO db 'Unhandled interrupt happened, halt...'
+ASM_UNHANDLED_INTERRUPT_INFO db 'Unhandled interrupt happened, halt...(22336290zc)'
                              db 0
 ASM_IDTR dw 0
          dd 0

@@ -88,35 +88,29 @@ void InterruptManager::setTimeInterrupt(void *handler)
 extern "C" void c_time_interrupt_handler()
 {
     // 清空屏幕
-    for (int i = 0; i < 80; ++i)
-    {
-        stdio.print(0, i, ' ', 0x07);
-    }
-
-    // 输出中断发生的次数
-    ++times;
-    char str[] = "interrupt happend: ";
-    char number[10];
-    int temp = times;
-
-    // 将数字转换为字符串表示
-    for(int i = 0; i < 10; ++i ) {
-        if(temp) {
-            number[i] = temp % 10 + '0';
-        } else {
-            number[i] = '0';
+    if(times == 0){
+        for (int i = 0; i < 80; ++i)
+        {
+            stdio.print(0, i, ' ', 0x07);
         }
-        temp /= 10;
     }
+    ++times;
+    //need print chars
+    char str[] = "22336290zhangchao";
+    int offest = 0;
 
-    // 移动光标到(0,0)输出字符
-    stdio.moveCursor(0);
-    for(int i = 0; str[i]; ++i ) {
-        stdio.print(str[i]);
-    }
+    stdio.moveCursor((times / 10) % 80);
+    if(times % 10 == 0)
+        for (int i = 0; i < 80; ++i)
+        {
+            stdio.print(0, i, ' ', 0x07);
+        }
+        for(int i = 0; str[i];i++){
+            uint cursor = stdio.getCursor();
+            if(cursor == 80){
+                stdio.moveCursor(0);
+            }
+            stdio.print(str[i]);
+        }
 
-    // 输出中断发生的次数
-    for( int i = 9; i > 0; --i ) {
-        stdio.print(number[i]);
-    }
 }
