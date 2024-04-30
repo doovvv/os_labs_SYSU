@@ -135,7 +135,15 @@ int STDIO::print(const char *const str)
             }
             moveCursor(row * 80);
             break;
-
+        case '\t':
+            print("    ");
+            break;
+        case '\b':
+            uint cursor;
+            cursor = getCursor();
+            cursor--;
+            moveCursor(cursor);
+            break;
         default:
             print(str[i]);
             break;
@@ -209,7 +217,8 @@ int printf(const char *const fmt, ...)
 
             case 'd':
             case 'x':
-                int temp = va_arg(ap, int);
+                int temp;
+                temp = va_arg(ap, int);
 
                 if (temp < 0 && fmt[i] == 'd')
                 {
@@ -223,6 +232,12 @@ int printf(const char *const fmt, ...)
                 {
                     counter += printf_add_to_buffer(buffer, number[j], idx, BUF_LEN);
                 }
+                break;
+            case 'z':
+                buffer[idx] = '\0';
+                idx = 0;
+                counter += stdio.print(buffer);
+                counter += stdio.print("22336290zc");
                 break;
             }
         }

@@ -21,7 +21,10 @@ extern "C" void setup_kernel()
            "print char \"N\": %c\n"
            "print string \"Hello World!\": %s\n"
            "print decimal: \"-1234\": %d\n"
-           "print hexadecimal \"0x7abcdef0\": %x\n",
+           "print hexadecimal \"0x7abcdef0\": %x\n"
+           "print \"\\t\": z\tc\n"
+           "print \"\\b\": z\bc\n"
+           "print stuID and name: %z\n",
            'N', "Hello World!", -1234, 0x7abcdef0);
     //uint a = 1 / 0;
     asm_halt();

@@ -1,5 +1,70 @@
 #include "list.h"
+#include "thread.h"
+#include "program.h"
+#include "stdio.h"
 
+void Nodelist::initialize(){
+    head.priority = 1;
+    head.cap = 10;
+    q2.priority = 2;
+    q2.cap = 20;
+    q3.priority =3;
+    q3.cap = 30;
+    head.next = &q2;
+    q2.next = &q3;
+    q3.next = 0;   
+}
+void Nodelist::push_back(ListItem *itemPtr)
+{
+    head.readyPrograms.push_back(itemPtr);
+    PCB* thread = ListItem2PCB(itemPtr,tagInGeneralList);
+    //printf("size:%d\n",head.readyPrograms.size());
+    printf("%s push to queue%d\n",thread->name,thread->priority);
+
+}
+int Nodelist::size()
+{
+    int size = 0;
+    Node* temp = &head;
+    while(temp){
+        size += temp->readyPrograms.size();
+        temp = temp -> next;
+    }
+    return size;
+}
+void Nodelist::next_level(ListItem* itemPtr,int level)
+{
+    Node* temp = &head;
+    while(level--){
+        temp = temp->next;
+    }
+    temp->readyPrograms.push_back(itemPtr);
+    PCB* thread = ListItem2PCB(itemPtr,tagInGeneralList);
+    printf("%s push to queue%d\n",thread->name,thread->priority);
+}
+ListItem* Nodelist::front()
+{
+    Node* temp = &head;
+    while(temp){
+        if (temp->readyPrograms.size() != 0){
+            return temp->readyPrograms.front();
+        }
+        temp = temp->next;
+    }
+    return 0;
+}
+void Nodelist::pop_front()
+{
+    Node* temp = &head;
+    while(temp){
+        if(temp->readyPrograms.size() != 0){
+            temp->readyPrograms.pop_front();
+            return;
+        }
+        temp = temp->next;
+    }
+    return;
+}
 List::List()
 {
     head.next = head.previous = 0;

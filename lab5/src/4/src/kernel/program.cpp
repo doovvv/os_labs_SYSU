@@ -19,6 +19,7 @@ void ProgramManager::initialize()
 {
     allPrograms.initialize();
     readyPrograms.initialize();
+    mfq_list.initialize();
     running = nullptr;
 
     for (int i = 0; i < MAX_PROGRAM_AMOUNT; ++i)
@@ -48,24 +49,25 @@ int ProgramManager::executeThread(ThreadFunction function, void *parameter, cons
     }
 
     thread->status = ProgramStatus::READY;
-    thread->priority = priority;
-    thread->ticks = priority * 10;
+    thread->priority = 1;
+    thread->ticks = priority*10;
     thread->ticksPassedBy = 0;
     thread->pid = ((int)thread - (int)PCB_SET) / PCB_SIZE;
 
     // 线程栈
     thread->stack = (int *)((int)thread + PCB_SIZE);
     thread->stack -= 7;
-    thread->stack[0] = 0;
-    thread->stack[1] = 0;
-    thread->stack[2] = 0;
-    thread->stack[3] = 0;
-    thread->stack[4] = (int)function;
-    thread->stack[5] = (int)program_exit;
-    thread->stack[6] = (int)parameter;
+    thread->context = (struct Context*) thread->stack;
+    thread->context->esi = 0;
+    thread->context->edi = 0;
+    thread->context->ebx = 0;
+    thread->context->ebp = 0;
+    thread->context->function = (int)function;
+    thread->context->program_exit = (int)program_exit;
+    thread->context->paremeter = (int)parameter;
 
     allPrograms.push_back(&(thread->tagInAllList));
-    readyPrograms.push_back(&(thread->tagInGeneralList));
+    mfq_list.push_back(&(thread->tagInGeneralList));
 
     // 恢复中断
     interruptManager.setInterruptStatus(status);
@@ -78,7 +80,7 @@ void ProgramManager::schedule()
     bool status = interruptManager.getInterruptStatus();
     interruptManager.disableInterrupt();
 
-    if (readyPrograms.size() == 0)
+    if (mfq_list.size() == 0)
     {
         interruptManager.setInterruptStatus(status);
         return;
@@ -87,20 +89,25 @@ void ProgramManager::schedule()
     if (running->status == ProgramStatus::RUNNING)
     {
         running->status = ProgramStatus::READY;
-        running->ticks = running->priority * 10;
-        readyPrograms.push_back(&(running->tagInGeneralList));
+        running->priority += 1;
+        if(running->priority > 3){
+            running->priority = 3;
+        }
+        running->ticks = running->priority*10;
+        mfq_list.next_level(&(running->tagInGeneralList),running->priority-1);
     }
     else if (running->status == ProgramStatus::DEAD)
     {
         releasePCB(running);
     }
 
-    ListItem *item = readyPrograms.front();
+    ListItem *item = mfq_list.front();
+    //printf("size:%d\n",mfq_list.size());
     PCB *next = ListItem2PCB(item, tagInGeneralList);
     PCB *cur = running;
     next->status = ProgramStatus::RUNNING;
     running = next;
-    readyPrograms.pop_front();
+    mfq_list.pop_front();
 
     asm_switch_thread(cur, next);
 

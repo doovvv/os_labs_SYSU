@@ -6,7 +6,6 @@ struct ListItem
     ListItem *previous;
     ListItem *next;
 };
-
 class List
 {
 public:
@@ -45,5 +44,26 @@ public:
     // 返回给定元素在List中的序号
     int find(ListItem *itemPtr);
 };
+struct Node
+{
+    List readyPrograms;
+    int priority;
+    int cap;
+    Node* next;
 
+};
+class Nodelist
+{
+public:
+    Node head;
+    Node q2;
+    Node q3;
+public:
+    void initialize();   
+    void push_back(ListItem* itemPtr);
+    int size();
+    void next_level(ListItem* itemPtr,int level);
+    ListItem* front();
+    void pop_front();
+};
 #endif

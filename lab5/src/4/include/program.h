@@ -11,6 +11,7 @@ class ProgramManager
 public:
     List allPrograms;   // 所有状态的线程/进程的队列
     List readyPrograms; // 处于ready(就绪态)的线程/进程的队列
+    Nodelist mfq_list;
     PCB *running;       // 当前执行的线程
 public:
     ProgramManager();

@@ -14,7 +14,15 @@ enum ProgramStatus
     BLOCKED,
     DEAD
 };
-
+struct Context{
+    int ebp;
+    int ebx;
+    int edi;
+    int esi;
+    int function;
+    int program_exit;
+    int paremeter;
+};
 struct PCB
 {
     int *stack;                      // 栈指针，用于调度时保存esp
@@ -26,6 +34,7 @@ struct PCB
     int ticksPassedBy;               // 线程已执行时间
     ListItem tagInGeneralList;       // 线程队列标识
     ListItem tagInAllList;           // 线程队列标识
+    struct Context* context ;         //process context 
 };
 
 #endif

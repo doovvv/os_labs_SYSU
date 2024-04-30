@@ -13,11 +13,13 @@ ProgramManager programManager;
 
 void third_thread(void *arg) {
     printf("pid %d name \"%s\": Hello World!\n", programManager.running->pid, programManager.running->name);
-    while(1) {
-
-    }
+    //printf("these thread's PCB is done by zc2233620\n");
 }
 void second_thread(void *arg) {
+    int count = 0;
+    while(count < 1000000000){
+        count++;
+    }
     printf("pid %d name \"%s\": Hello World!\n", programManager.running->pid, programManager.running->name);
 }
 void first_thread(void *arg)
@@ -26,8 +28,8 @@ void first_thread(void *arg)
     printf("pid %d name \"%s\": Hello World!\n", programManager.running->pid, programManager.running->name);
     if (!programManager.running->pid)
     {
-        //programManager.executeThread(second_thread, nullptr, "second thread", 1);
-        //programManager.executeThread(third_thread, nullptr, "third thread", 1);
+        programManager.executeThread(second_thread, nullptr, "second thread", 1);
+        programManager.executeThread(third_thread, nullptr, "third thread", 1);
     }
     asm_halt();
 }
@@ -54,10 +56,10 @@ extern "C" void setup_kernel()
         asm_halt();
     }
 
-    ListItem *item = programManager.readyPrograms.front();
+    ListItem *item = programManager.mfq_list.front();
     PCB *firstThread = ListItem2PCB(item, tagInGeneralList);
     firstThread->status = RUNNING;
-    programManager.readyPrograms.pop_front();
+    programManager.mfq_list.pop_front();
     programManager.running = firstThread;
     asm_switch_thread(0, firstThread);
 
