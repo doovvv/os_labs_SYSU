@@ -17,10 +17,9 @@ void SpinLock::initialize()
 void SpinLock::lock()
 {
     uint32 key = 1;
-
     do
     {
-        asm_atomic_exchange(&key, &bolt);
+        asm_atomic_bts(&key, &bolt);
         //printf("pid: %d\n", programManager.running->pid);
     } while (key);
 }

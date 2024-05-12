@@ -15,5 +15,6 @@ extern "C" int asm_interrupt_status();
 extern "C" void asm_disable_interrupt();
 extern "C" void asm_switch_thread(void *cur, void *next);
 extern "C" void asm_atomic_exchange(uint32 *reg, uint32 *mem);
+extern "C" void asm_atomic_bts(uint32 *reg, uint32 *mem);
 
 #endif

@@ -13,6 +13,7 @@ global asm_disable_interrupt
 global asm_interrupt_status
 global asm_switch_thread
 global asm_atomic_exchange
+global asm_atomic_bts
 extern c_time_interrupt_handler
 ASM_UNHANDLED_INTERRUPT_INFO db 'Unhandled interrupt happened, halt...'
                              db 0
@@ -35,6 +36,27 @@ asm_atomic_exchange:
     popad
     pop ebp
     ret
+
+asm_atomic_bts:
+    push ebp
+    mov ebp, esp
+    pushad
+    mov eax,1
+    mov ebx, [ebp + 4 * 3] ; memeory address
+    lock bts word [ebx],0        ;
+    jnc set_key
+continue:
+    mov ebx, [ebp + 4 * 2] ; register
+    mov [ebx],eax          ; 
+
+    popad
+    pop ebp
+    ret
+
+set_key:
+    mov eax,0
+    jmp continue
+
 
 ; void asm_switch_thread(PCB *cur, PCB *next);
 asm_switch_thread:

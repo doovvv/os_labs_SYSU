@@ -22,18 +22,18 @@ void a_mother(void *arg)
     aLock.lock();
     int delay = 0;
 
-    printf("mother: start to make cheese burger, there are %d cheese burger now\n", cheese_burger);
+    printf("zc: start to make cheese burger, there are %d cheese burger now\n", cheese_burger);
     // make 10 cheese_burger
     cheese_burger += 10;
 
-    printf("mother: oh, I have to hang clothes out.\n");
+    printf("zc: oh, I have to hang clothes out.\n");
     // hanging clothes out
-    delay = 0xfffffff;
+    delay = 0xffff;
     while (delay)
         --delay;
     // done
 
-    printf("mother: Oh, Jesus! There are %d cheese burgers\n", cheese_burger);
+    printf("zc: Oh, Jesus! There are %d cheese burgers\n", cheese_burger);
     aLock.unlock();
 }
 
