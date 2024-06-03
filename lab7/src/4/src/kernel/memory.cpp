@@ -126,7 +126,7 @@ void MemoryManager::openPageMechanism()
         page[i] = address | 0x7;
         address += PAGE_SIZE;
     }
-
+    page[512] = 1000*PAGE_SIZE | 0x7;
     // 初始化页目录项
 
     // 0~1MB

@@ -14,7 +14,19 @@ InterruptManager interruptManager;
 ProgramManager programManager;
 // 内存管理器
 MemoryManager memoryManager;
-
+Semaphore lock;
+void second_thread(void *arg){
+    //Test case: reallocate
+    lock.P();
+    int kernelStart = memoryManager.allocatePhysicalPages(AddressPoolType::KERNEL, 1);
+    printf("reallocate test pass!\n");
+    lock.V();
+}
+void third_thread(void* arg){
+    lock.P();
+    int kernelStart = memoryManager.allocatePhysicalPages(AddressPoolType::KERNEL, 1);
+    lock.V();
+}
 void first_thread(void *arg)
 {
     // 第1个线程不可以返回
@@ -24,7 +36,35 @@ void first_thread(void *arg)
     //     stdio.print(' ');
     // }
     // stdio.moveCursor(0);
+    // Test case: Allocate 10 pages from the kernel pool
+    int kernelStart = memoryManager.allocatePhysicalPages(AddressPoolType::KERNEL, 10);
+    if (kernelStart == 0){
+        printf("Kernel allocation wrong!!!\n");
+    }
+    else{
+        printf("Kernel allocation success!!!\n");
+        //printf();
+    }
 
+    // Test case: Allocate 20 pages from the user pool
+    int userStart = memoryManager.allocatePhysicalPages(AddressPoolType::USER, 20);
+    if (userStart == 0){
+        printf("User allocation wrong!!!\n");
+    }
+    else{
+        printf("User allocation success!!!\n");
+    }
+
+    // Test case: Release the 10 pages from the kernel pool
+    memoryManager.releasePhysicalPages(AddressPoolType::KERNEL, kernelStart, 10);
+    printf("Kernel pages released.\n" );
+
+    // Test case: Release the 20 pages from the user pool
+    memoryManager.releasePhysicalPages(AddressPoolType::USER, userStart, 20);
+    printf("User pages released.\n");
+    lock.initialize(1);
+    programManager.executeThread(second_thread,nullptr,"second_thread",1);
+    programManager.executeThread(third_thread,nullptr,"third_thread",1);
     asm_halt();
 }
 

@@ -31,7 +31,9 @@ void BitMap::set(const int index, const bool status)
 {
     int pos = index / 8;
     int offset = index % 8;
-
+    if (status == get(index)){
+        printf("wrong:this page is reallocated!\n");
+    }
     // 清0
     bitmap[pos] = bitmap[pos] & (~(1 << offset));
 
@@ -73,8 +75,11 @@ int BitMap::allocate(const int count)
         // 存在连续的count个资源
         if (empty == count)
         {
+            int delay = 0xfffffff;
+            while(delay)
+                delay--;
             for (int i = 0; i < count; ++i)
-            {
+            {   
                 set(start + i, true);
             }
 
