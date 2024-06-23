@@ -55,6 +55,8 @@ public:
 
     // 切换页目录表，实现虚拟地址空间的切换
     void activateProgramPage(PCB *program);
+
+    PCB *findProgramByPid(int pid); 
 };
 
 void program_exit();

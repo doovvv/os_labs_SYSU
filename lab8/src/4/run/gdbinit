@@ -1,3 +1,5 @@
 target remote:1234
 file ../build/kernel.o
 set disassembly-flavor intel
+b program.cpp:130
+c

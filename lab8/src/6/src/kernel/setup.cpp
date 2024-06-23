@@ -35,49 +35,34 @@ void first_process()
 
     if (pid)
     {
-        pid = fork();
-        if (pid)
-        {
-            while ((pid = wait(&retval)) != -1)
-            {
-                printf("wait for a child process, pid: %d, return value: %d\n", pid, retval);
-            }
-
-            printf("all child process exit, programs: %d\n", programManager.allPrograms.size());
-            
-            asm_halt();
-        }
-        else
-        {
-            uint32 tmp = 0xffffff;
-            while (tmp)
-                --tmp;
-            printf("exit, pid: %d\n", programManager.running->pid);
-            exit(123934);
-        }
+        printf("I'm father process, I'll exit\n");
+        printf("num of PCB:%d\n",programManager.allPrograms.size());
+        exit(0);
     }
     else
     {
-        uint32 tmp = 0xffffff;
-        while (tmp)
-            --tmp;
-        printf("exit, pid: %d\n", programManager.running->pid);
-        exit(-123);
+        printf("I'm child process, I'll exit\n");
+        printf("num of PCB:%d\n",programManager.allPrograms.size());
     }
 }
 
-void second_thread(void *arg)
+/*void second_thread(void *arg)
 {
     printf("thread exit\n");
     //exit(0);
-}
+}*/
 
 void first_thread(void *arg)
 {
 
     printf("start process\n");
     programManager.executeProcess((const char *)first_process, 1);
-    programManager.executeThread(second_thread, nullptr, "second", 1);
+    int delay = 0x3f3f3f3f;
+    while(delay){
+        delay--;
+    }
+    printf("I'm thread\n");
+    printf("num of PCB:%d\n",programManager.allPrograms.size());
     asm_halt();
 }
 

@@ -211,7 +211,10 @@ int ProgramManager::executeProcess(const char *filename, int priority)
     }
 
     // 找到刚刚创建的PCB
-    PCB *process = ListItem2PCB(allPrograms.back(), tagInAllList);
+    PCB *process = findProgramByPid(pid);
+    if(process == nullptr){
+        return -1;
+    }
 
     // 创建进程的页目录表
     process->pageDirectoryAddress = createProcessPageDirectory();
@@ -336,4 +339,10 @@ void ProgramManager::activateProgramPage(PCB *program)
     }
 
     asm_update_cr3(paddr);
+}
+PCB *ProgramManager:: findProgramByPid(int pid){
+    if(pid == -1){
+        return nullptr;
+    }
+    return ListItem2PCB(allPrograms.back(), tagInAllList);
 }

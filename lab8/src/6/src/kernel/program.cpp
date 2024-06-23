@@ -558,6 +558,19 @@ void ProgramManager::exit(int ret)
         int bitmapPages = ceil(bitmapBytes, PAGE_SIZE);
 
         memoryManager.releasePages(AddressPoolType::KERNEL, (int)program->userVirtual.resources.bitmap, bitmapPages);
+        bool flag = true;
+        ListItem* item = this->allPrograms.head.next;
+        while(item){
+            PCB* father = ListItem2PCB(item,tagInAllList);
+            if(father->pid == this->running->parentPid && father->pid != 0){
+                flag = false;
+                break;
+            }
+            item = item->next;
+        }
+        if(flag){
+            releasePCB(this->running);
+        }
     }
 
     schedule();

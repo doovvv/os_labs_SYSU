@@ -26,7 +26,7 @@ struct PCB
     int ticks;                       // 线程时间片总时间
     int ticksPassedBy;               // 线程已执行时间
     ListItem tagInGeneralList;       // 线程队列标识
-    ListItem tagInAllList;           // 线程队列标识
+    ListItem tagInAllList;           // 线程队列标识        
 
     int pageDirectoryAddress; // 页目录表地址
     AddressPool userVirtual;  // 用户程序虚拟地址池
